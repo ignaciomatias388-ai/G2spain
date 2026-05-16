@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GER2SPAIN AUTO — Importación de vehículos de Alemania a España</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Inter',sans-serif;background:#080808;color:#fff;overflow-x:hidden;}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;background:rgba(8,8,8,0.97);border-bottom:2px solid #c9a227;display:flex;align-items:center;justify-content:space-between;padding:14px 40px;}
+.nav-logo{font-family:'Rajdhani',sans-serif;font-size:26px;font-weight:700;letter-spacing:2px;color:#fff;text-decoration:none;}
+.nav-logo .r{color:#d62d20;}.nav-logo .g{color:#c9a227;}
+.nav-links{display:flex;gap:24px;}
+.nav-links a{color:#aaa;text-decoration:none;font-size:13px;cursor:pointer;transition:color .2s;}
+.nav-links a:hover{color:#c9a227;}
+.nav-right{display:flex;gap:10px;align-items:center;}
+.nav-ig{background:transparent;border:1px solid #c9a227;color:#c9a227;padding:8px 16px;border-radius:6px;font-size:13px;text-decoration:none;display:flex;align-items:center;gap:6px;transition:background .2s;}
+.nav-ig:hover{background:rgba(201,162,39,.1);}
+.nav-cta{background:#d62d20;color:#fff;border:none;padding:9px 20px;border-radius:6px;font-size:13px;cursor:pointer;font-weight:500;display:flex;align-items:center;gap:6px;}
+.nav-cta:hover{background:#b02218;}
+
+/* HERO — full-screen image, no text */
+.hero{width:100%;height:100vh;min-height:600px;max-height:900px;position:relative;overflow:hidden;border-bottom:3px solid #c9a227;background:#000;display:block;}
+.hero-car{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 35%;display:block;
+  filter:brightness(1.08) contrast(1.12) saturate(1.15);
+  image-rendering:-webkit-optimize-contrast;}
+/* Vignette cinematográfico — bordes oscuros, centro limpio */
+.hero::before{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:
+    radial-gradient(ellipse 120% 100% at 50% 50%, transparent 40%, rgba(0,0,0,0.55) 100%),
+    linear-gradient(to bottom, rgba(0,0,0,0.30) 0%, transparent 20%, transparent 80%, rgba(0,0,0,0.45) 100%);}
+/* Línea gold inferior */
+.hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(to right,transparent,#c9a227 30%,#c9a227 70%,transparent);z-index:2;}
+/* Botones hero */
+.hero-title-wrap{position:absolute;top:50%;left:48px;transform:translateY(-58%);text-align:left;z-index:3;pointer-events:none;max-width:500px;}
+.hero-title{font-family:'Rajdhani',sans-serif;font-size:clamp(30px,4.5vw,58px);font-weight:700;color:#fff;line-height:1.05;letter-spacing:1px;text-shadow:0 2px 20px rgba(0,0,0,0.5);}
+.hero-title .g2-red{color:#d62d20;}
+.hero-title span{color:#c9a227;}
+.hero-sub{font-family:'Inter',sans-serif;font-size:clamp(11px,1.2vw,14px);color:rgba(255,255,255,0.72);margin-top:22px;letter-spacing:2px;text-transform:uppercase;text-shadow:0 1px 10px rgba(0,0,0,0.55);border-left:2px solid #c9a227;padding-left:10px;}
+.hero-btns{position:absolute;bottom:44px;left:50%;transform:translateX(-50%);display:flex;gap:14px;flex-wrap:wrap;justify-content:center;z-index:3;}
+.btn-p{background:rgba(214,45,32,0.92);color:#fff;border:none;padding:14px 28px;border-radius:7px;font-size:14px;cursor:pointer;font-weight:500;display:flex;align-items:center;gap:8px;transition:background .2s;text-decoration:none;backdrop-filter:blur(4px);}
+.btn-p:hover{background:#d62d20;}
+.btn-s{background:rgba(0,0,0,0.55);color:#c9a227;border:1.5px solid #c9a227;padding:14px 28px;border-radius:7px;font-size:14px;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .2s;text-decoration:none;backdrop-filter:blur(4px);}
+.btn-s:hover{background:rgba(201,162,39,.15);}
+@media(max-width:768px){.hero{height:72vw;min-height:340px;max-height:560px;}.hero-car{object-position:center 35%;}.hero-btns{bottom:20px;gap:8px;}.btn-p,.btn-s{padding:10px 18px;font-size:13px;}.hero-title-wrap{left:20px;max-width:calc(100% - 40px);transform:translateY(-55%);}}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);}
+.stat{background:#0f0f0f;padding:24px 16px;text-align:center;border-right:1px solid #1a1a1a;border-top:1px solid #1a1a1a;}
+.stat:last-child{border-right:none;}
+.stat-n{font-family:'Rajdhani',sans-serif;font-size:30px;font-weight:700;color:#c9a227;}
+.stat-l{font-size:12px;color:#666;margin-top:4px;}
+
+/* SECTIONS */
+section{padding:72px 40px;}
+section h2{font-family:'Rajdhani',sans-serif;font-size:32px;font-weight:700;text-align:center;color:#fff;margin-bottom:8px;letter-spacing:1px;}
+.gold-line{width:50px;height:2px;background:#c9a227;margin:12px auto 40px;}
+.sec-sub{text-align:center;color:#666;font-size:14px;margin-bottom:40px;margin-top:-30px;}
+
+/* SOBRE NOSOTROS */
+.about-sec{background:#0a0a0a;border-top:1px solid #141414;}
+.about-inner{display:grid;grid-template-columns:380px 1fr;gap:60px;max-width:1000px;margin:0 auto;align-items:center;}
+.about-divider{max-width:1000px;margin:52px auto;border:none;border-top:1px solid #1e1e1e;position:relative;}
+.about-divider::after{content:'& también';position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:#0a0a0a;padding:0 16px;font-size:11px;color:#333;letter-spacing:2px;text-transform:uppercase;}
+.about-img-wrap{position:relative;border-radius:12px;overflow:hidden;aspect-ratio:3/4;background:#111;}
+.about-img-wrap img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block;}
+.about-img-wrap.landscape{aspect-ratio:16/12;}
+.about-img-wrap.landscape img{object-fit:cover;object-position:center center;}
+.about-img-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(8,8,8,0.8) 0%,transparent 45%);}
+.about-img-badge{position:absolute;bottom:20px;left:20px;right:20px;background:rgba(8,8,8,0.88);border:1px solid rgba(201,162,39,0.45);border-radius:8px;padding:14px 18px;}
+.about-img-badge .name{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:#fff;}
+.about-img-badge .role{font-size:12px;color:#c9a227;letter-spacing:1px;margin-top:3px;}
+.about-text h3{font-family:'Rajdhani',sans-serif;font-size:24px;font-weight:700;color:#fff;margin-bottom:20px;line-height:1.3;}
+.about-text h3 span{color:#c9a227;}
+.about-text p{font-size:14px;color:#888;line-height:1.9;margin-bottom:16px;}
+.about-tags{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px;}
+.about-tag{background:rgba(201,162,39,0.08);border:1px solid rgba(201,162,39,0.25);color:#c9a227;font-size:12px;padding:6px 14px;border-radius:20px;display:flex;align-items:center;gap:6px;}
+.about-intro{max-width:1000px;margin:0 auto 48px;padding:24px 32px;background:rgba(201,162,39,0.04);border:1px solid rgba(201,162,39,0.15);border-radius:10px;border-left:3px solid #c9a227;}
+.about-intro p{font-size:14px;color:#888;line-height:1.9;margin-bottom:12px;}
+.about-intro p:last-child{margin-bottom:0;}
+.about-intro strong{color:#fff;}
+@media(max-width:768px){.about-inner{grid-template-columns:1fr;}}
+
+/* STEPS */
+.steps-sec{background:#0b0b0b;border-top:1px solid #141414;}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:20px;max-width:960px;margin:0 auto;}
+.step{background:#0f0f0f;border:1px solid #1e1e1e;border-top:3px solid #c9a227;border-radius:8px;padding:24px 18px;text-align:center;transition:all .25s;}
+.step:hover{border-top-color:#d62d20;transform:translateY(-3px);}
+.step-n{width:38px;height:38px;border-radius:50%;background:#d62d20;color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;margin:0 auto 16px;font-family:'Rajdhani',sans-serif;}
+.step h3{font-size:14px;font-weight:500;color:#fff;margin-bottom:7px;}
+.step p{font-size:12px;color:#666;line-height:1.7;}
+
+/* CALCULADORA */
+.calc-sec{background:#080808;border-top:1px solid #141414;}
+.calc-modes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px auto 0;max-width:720px;}
+.calc-mode{background:#0f0f0f;border:1.5px solid #1e1e1e;border-radius:12px;padding:24px 20px;cursor:pointer;transition:border-color .2s,background .2s;text-align:left;}
+.calc-mode:hover{border-color:rgba(201,162,39,.5);background:rgba(201,162,39,.03);}
+.calc-mode.selected{border-color:#c9a227;background:rgba(201,162,39,.06);}
+.calc-mode-icon{font-size:24px;display:block;margin-bottom:12px;}
+.calc-mode h4{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:#fff;margin-bottom:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.calc-mode p{font-size:12px;color:#666;line-height:1.5;margin:0;}
+.calc-mode-badge{background:#c9a227;color:#000;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;letter-spacing:.5px;font-family:'Inter',sans-serif;}
+.calc-url-box{background:#0f0f0f;border:1px solid #1e1e1e;border-radius:12px;padding:24px 28px;max-width:720px;margin:20px auto 0;}
+.calc-url-box p{font-size:12px;color:#555;margin-top:10px;margin-bottom:0;}
+@media(max-width:768px){.calc-modes{grid-template-columns:1fr;}}
+.calc-wrap{display:flex;flex-direction:column;gap:28px;max-width:720px;margin:0 auto;}
+.calc-box{background:#0f0f0f;border:1px solid #1e1e1e;border-radius:12px;padding:28px;}
+.calc-box h3{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:#c9a227;margin-bottom:20px;display:flex;align-items:center;gap:8px;}
+.calc-section-title{font-size:10px;color:#555;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;margin-top:20px;padding-bottom:7px;border-bottom:1px solid #1a1a1a;}
+.calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:4px;}
+.field label{display:block;font-size:11px;color:#666;margin-bottom:5px;letter-spacing:.5px;}
+.field input,.field select{width:100%;background:#080808;border:1px solid #2a2a2a;color:#fff;padding:9px 12px;border-radius:6px;font-size:13px;font-family:'Inter',sans-serif;}
+.field input:focus,.field select:focus{outline:none;border-color:#c9a227;}
+.field select option{background:#1a1a1a;}
+.field-full{grid-column:1/-1;}
+.field-hint{font-size:10px;color:#444;margin-top:3px;display:block;}
+.transport-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px;}
+.transport-opt{background:#080808;border:1.5px solid #1e1e1e;border-radius:8px;padding:14px;cursor:pointer;display:flex;gap:12px;align-items:flex-start;transition:all .2s;}
+.transport-opt:hover{border-color:rgba(201,162,39,.3);}
+.transport-opt.active{border-color:#c9a227;background:rgba(201,162,39,.05);}
+.transport-opt i{font-size:22px;color:#555;flex-shrink:0;margin-top:2px;}
+.transport-opt.active i{color:#c9a227;}
+.t-name{font-size:13px;font-weight:500;color:#fff;}
+.t-detail{font-size:11px;color:#555;margin-top:3px;line-height:1.5;}
+.gestoria-check{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12px;color:#777;margin-top:10px;}
+.gestoria-check input{accent-color:#c9a227;width:14px;height:14px;}
+.calc-btn{width:100%;background:#d62d20;color:#fff;border:none;padding:13px;border-radius:7px;font-size:14px;cursor:pointer;font-weight:500;font-family:'Inter',sans-serif;transition:background .2s;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:18px;}
+.calc-btn:hover{background:#b02218;}
+/* RESULTADOS V2 */
+.results-v2{background:#0f0f0f;border:1px solid #1e1e1e;border-radius:12px;padding:24px;display:none;}
+.results-v2.show{display:block;}
+.res-v2-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
+.res-v2-header .title{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:#fff;}
+.res-v2-note{font-size:10px;color:#444;}
+.res-v2-cat{margin-bottom:18px;}
+.res-v2-cat-title{font-size:10px;color:#c9a227;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;font-weight:600;padding-bottom:5px;border-bottom:1px solid #1a1a1a;}
+.res-v2-row{display:flex;justify-content:space-between;align-items:center;padding:6px 8px;border-radius:4px;font-size:12px;}
+.res-v2-row:nth-child(even){background:rgba(255,255,255,0.02);}
+.res-v2-row .lbl{color:#777;}
+.res-v2-row .val{color:#ddd;font-weight:500;font-family:'Rajdhani',sans-serif;font-size:14px;}
+.res-v2-totals{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:20px 0 14px;}
+.res-v2-total{border-radius:8px;padding:16px 10px;text-align:center;}
+.res-v2-total.low{background:rgba(34,166,18,0.08);border:1px solid rgba(34,166,18,0.25);}
+.res-v2-total.mid{background:rgba(201,162,39,0.1);border:1px solid rgba(201,162,39,0.4);}
+.res-v2-total.high{background:rgba(214,45,32,0.08);border:1px solid rgba(214,45,32,0.25);}
+.res-v2-total .rlabel{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:#555;margin-bottom:6px;}
+.res-v2-total .ramount{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;}
+.res-v2-total.low .ramount{color:#22a612;}
+.res-v2-total.mid .ramount{color:#c9a227;}
+.res-v2-total.high .ramount{color:#d62d20;}
+.res-v2-total .rnote{font-size:10px;color:#444;margin-top:4px;}
+.res-v2-disclaimer{font-size:11px;color:#555;text-align:center;line-height:1.7;padding:12px 16px;background:rgba(201,162,39,0.04);border-radius:6px;border:1px solid rgba(201,162,39,0.15);}
+
+/* CATÁLOGO */
+.cat-sec{background:#0a0a0a;border-top:1px solid #141414;}
+.brand-main-tabs{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:10px;}
+.brand-main-tab{background:#0f0f0f;border:1px solid #1e1e1e;color:#888;padding:10px 22px;border-radius:6px;font-size:14px;font-weight:500;cursor:pointer;transition:all .2s;font-family:'Rajdhani',sans-serif;letter-spacing:.5px;}
+.brand-main-tab:hover,.brand-main-tab.active{background:rgba(201,162,39,.12);border-color:#c9a227;color:#c9a227;}
+.brand-otros-btn{background:#111;border:1px dashed #2a2a2a;color:#666;padding:10px 20px;border-radius:6px;font-size:13px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px;font-family:'Inter',sans-serif;}
+.brand-otros-btn:hover{border-color:#c9a227;color:#c9a227;}
+.brand-otros-panel{display:none;flex-wrap:wrap;gap:8px;justify-content:center;background:#0d0d0d;border:1px solid #1e1e1e;border-radius:8px;padding:14px 18px;margin-bottom:8px;max-width:800px;margin-left:auto;margin-right:auto;}
+.brand-otros-panel.open{display:flex;}
+.brand-sec-tab{background:#0f0f0f;border:1px solid #1e1e1e;color:#777;padding:7px 16px;border-radius:6px;font-size:12px;cursor:pointer;transition:all .2s;}
+.brand-sec-tab:hover,.brand-sec-tab.active{background:rgba(201,162,39,.08);border-color:rgba(201,162,39,.4);color:#c9a227;}
+.car-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;max-width:1100px;margin:24px auto 0;}
+.car-listing{background:#0f0f0f;border:1px solid #1e1e1e;border-radius:10px;overflow:hidden;transition:all .25s;text-decoration:none;display:block;}
+.car-listing:hover{border-color:#c9a227;transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,0.4);}
+.car-listing-img{height:170px;overflow:hidden;background:#111;position:relative;}
+.car-listing-img img{width:100%;height:100%;object-fit:cover;transition:transform .4s;}
+.car-listing:hover .car-listing-img img{transform:scale(1.05);}
+.car-listing-badge{position:absolute;top:10px;left:10px;background:rgba(8,8,8,0.85);border:1px solid rgba(201,162,39,.4);color:#c9a227;font-size:10px;padding:3px 9px;border-radius:4px;font-family:'Rajdhani',sans-serif;letter-spacing:1px;}
+.car-listing-portal{position:absolute;top:10px;right:10px;background:rgba(8,8,8,0.85);border:1px solid #2a2a2a;color:#666;font-size:9px;padding:3px 8px;border-radius:4px;}
+.car-listing-body{padding:14px 16px;}
+.car-listing-model{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:#fff;margin-bottom:5px;line-height:1.2;}
+.car-listing-meta{font-size:11px;color:#555;margin-bottom:10px;display:flex;gap:10px;flex-wrap:wrap;}
+.car-listing-meta span{display:flex;align-items:center;gap:3px;}
+.car-listing-price{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;color:#c9a227;margin-bottom:12px;}
+.car-listing-ctas{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.car-listing-cta{background:#111;border:1px solid #2a2a2a;color:#888;padding:7px 6px;border-radius:5px;font-size:10px;text-align:center;text-decoration:none;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:4px;}
+.car-listing-cta:hover{border-color:#c9a227;color:#c9a227;}
+.car-no-img{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,#111 0%,#161616 100%);}
+.car-no-img i{font-size:32px;color:#2a2a2a;}
+.car-no-img span{font-size:10px;color:#333;letter-spacing:1px;text-transform:uppercase;}
+.cat-portals{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;max-width:820px;margin:28px auto 0;}
+.cat-card{background:#0f0f0f;border:1px solid #1e1e1e;border-radius:10px;padding:22px 18px;text-align:center;transition:all .25s;cursor:pointer;text-decoration:none;display:block;}
+.cat-card:hover{border-color:#c9a227;transform:translateY(-2px);}
+.cat-card .ico{font-size:28px;margin-bottom:10px;}
+.cat-card h3{font-size:14px;font-weight:500;color:#fff;margin-bottom:5px;}
+.cat-card p{font-size:12px;color:#666;}
+.cat-card .arrow{margin-top:10px;font-size:12px;color:#c9a227;}
+.cat-portals-wrap{margin-top:32px;border-top:1px solid #141414;padding-top:28px;}
+
+/* TESTIMONIOS */
+.test-sec{background:#080808;border-top:1px solid #141414;}
+.test-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;max-width:1100px;margin:0 auto;}
+.test-card{background:#0f0f0f;border:1px solid #1e1e1e;border-radius:10px;padding:24px;}
+.test-stars{color:#c9a227;font-size:14px;margin-bottom:12px;}
+.test-text{font-size:13px;color:#888;line-height:1.7;margin-bottom:16px;font-style:italic;}
+.test-author{display:flex;justify-content:space-between;align-items:center;}
+.test-name{font-size:13px;font-weight:500;color:#fff;}
+.test-detail{font-size:11px;color:#555;margin-top:2px;}
+.test-saving{background:rgba(34,166,18,0.1);border:1px solid rgba(34,166,18,0.3);border-radius:6px;padding:6px 12px;text-align:center;}
+.test-saving .s-amt{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:#22a612;}
+.test-saving .s-lbl{font-size:10px;color:#555;}
+
+/* CONTACT */
+.contact-sec{background:#080808;border-top:1px solid #141414;}
+.contact-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px;max-width:760px;margin:0 auto;}
+.cc{background:#0f0f0f;border:1px solid #1e1e1e;border-radius:10px;padding:26px 18px;text-align:center;transition:all .25s;cursor:pointer;text-decoration:none;display:block;}
+.cc:hover{border-color:#c9a227;transform:translateY(-2px);}
+.cc-icon{width:48px;height:48px;border-radius:50%;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:20px;}
+.cc-wa{background:rgba(37,211,102,.12);color:#25d366;}
+.cc-vid{background:rgba(201,162,39,.12);color:#c9a227;}
+.cc-ig{background:rgba(214,45,32,.12);color:#d62d20;}
+.cc h3{font-size:14px;font-weight:500;color:#fff;margin-bottom:5px;}
+.cc p{font-size:12px;color:#666;line-height:1.6;}
+.vcall{background:#0f0f0f;border:1px solid rgba(201,162,39,.35);border-radius:12px;padding:32px;max-width:860px;margin:36px auto 0;overflow:visible;text-align:center;}
+.vcall h3{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:#c9a227;margin-bottom:8px;text-align:center;}
+.vcall p{font-size:13px;color:#666;margin-bottom:24px;text-align:center;line-height:1.6;}
+.vform{display:grid;gap:12px;}
+.vform input,.vform select,.vform textarea{width:100%;background:#080808;border:1px solid #2a2a2a;color:#fff;padding:10px 14px;border-radius:6px;font-size:13px;font-family:'Inter',sans-serif;}
+.vform textarea{height:80px;resize:none;}
+.vform input:focus,.vform select:focus,.vform textarea:focus{outline:none;border-color:#c9a227;}
+.vform select option{background:#1a1a1a;}
+.vcall-benefits{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-bottom:24px;}
+.vcall-benefits span{font-size:12px;color:#888;display:flex;align-items:center;gap:5px;}
+.vcall-benefits span i{color:#c9a227;font-size:13px;}
+.vcall-cta{display:inline-flex;align-items:center;gap:8px;background:#c9a227;color:#000;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:15px;letter-spacing:.5px;padding:14px 32px;border-radius:6px;text-decoration:none;border:none;outline:none;box-shadow:none;cursor:pointer;transition:background .2s,transform .2s;}
+.vcall-cta:hover{background:#e0b830;transform:translateY(-1px);border:none;outline:none;box-shadow:none;}
+.vcall-cta:focus,.vcall-cta:active{background:#c9a227;outline:none;box-shadow:none;border:none;}
+.vcall-note{font-size:11px;color:#444;margin-top:12px;margin-bottom:0;}
+
+/* FOOTER */
+.footer{background:#050505;border-top:2px solid #c9a227;padding:32px 40px;}
+.footer-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;}
+.footer-logo{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;color:#c9a227;letter-spacing:2px;}
+.footer-links{display:flex;gap:20px;}
+.footer-links a{color:#444;font-size:12px;text-decoration:none;cursor:pointer;transition:color .2s;}
+.footer-links a:hover{color:#c9a227;}
+.footer-social{display:flex;gap:10px;}
+.fsoc{width:36px;height:36px;border-radius:50%;border:1px solid #2a2a2a;display:flex;align-items:center;justify-content:center;color:#777;font-size:18px;text-decoration:none;transition:all .2s;}
+.fsoc:hover{border-color:#c9a227;color:#c9a227;}
+.footer-copy{width:100%;text-align:center;font-size:12px;color:#2a2a2a;margin-top:20px;padding-top:20px;border-top:1px solid #141414;}
+
+/* WA FLOAT */
+.wa-float{position:fixed;bottom:24px;right:24px;z-index:999;background:#25d366;color:#fff;width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;text-decoration:none;box-shadow:0 4px 20px rgba(37,211,102,0.4);transition:transform .2s;}
+.wa-float:hover{transform:scale(1.1);}
+
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none;}
+.hamburger span{display:block;width:22px;height:2px;background:#c9a227;border-radius:2px;transition:all .3s;}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.hamburger.open span:nth-child(2){opacity:0;}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+.mobile-menu{display:none;position:fixed;top:57px;left:0;right:0;background:rgba(8,8,8,0.98);border-bottom:2px solid #c9a227;padding:20px 24px;z-index:99;flex-direction:column;gap:0;}
+.mobile-menu.open{display:flex;}
+.mobile-menu a{color:#aaa;text-decoration:none;font-size:15px;padding:14px 0;border-bottom:1px solid #141414;cursor:pointer;transition:color .2s;}
+.mobile-menu a:last-child{border-bottom:none;}
+.mobile-menu a:hover{color:#c9a227;}
+.mobile-menu-cta{display:flex;flex-direction:column;gap:10px;margin-top:16px;}
+.mobile-menu-cta a{text-align:center;justify-content:center;}
+
+@media(max-width:768px){
+  .nav-links{display:none;}
+  .nav-ig{display:none;}
+  .nav-cta{display:none;}
+  .hamburger{display:flex;}
+  .hero{min-height:520px;}
+  .hero-content{padding:60px 24px 60px;}
+  .hero-visual::after{background:linear-gradient(180deg,rgba(8,8,8,0.7) 0%,rgba(8,8,8,0.55) 100%);}
+  .hero h1{font-size:48px;}
+  .stats{grid-template-columns:repeat(2,1fr);}
+  .about-inner{grid-template-columns:1fr;}
+  .calc-grid{grid-template-columns:1fr;}
+  .res-grid{grid-template-columns:1fr;}
+  section{padding:50px 24px;}
+  .nav{padding:12px 20px;}
+  .footer{padding:24px 20px;}
+}
+
+/* ── Hero entry animations ── */
+@keyframes g2SlideIn{from{opacity:0;transform:translateX(-28px)}to{opacity:1;transform:translateX(0)}}
+@keyframes g2FadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.hero-title{animation:g2SlideIn .85s cubic-bezier(.16,1,.3,1) .15s both}
+.hero-sub{animation:g2FadeUp .65s cubic-bezier(.16,1,.3,1) .7s both}
+.hero-btns{animation:g2FadeUp .6s cubic-bezier(.16,1,.3,1) 1.05s both}
+
+/* ── Scroll reveal — base ── */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .55s ease,transform .55s ease;will-change:opacity,transform;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.reveal-delay-1{transition-delay:.1s;}
+.reveal-delay-2{transition-delay:.2s;}
+.reveal-delay-3{transition-delay:.3s;}
+
+/* ── Scroll reveal — data-anim system ── */
+[data-anim]{opacity:0;will-change:opacity,transform;transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1);}
+[data-anim="fade-up"]{transform:translateY(30px);}
+[data-anim="fade-left"]{transform:translateX(-26px);}
+[data-anim="fade-right"]{transform:translateX(26px);}
+[data-anim="fade"]{transform:none;}
+[data-anim].anim-in{opacity:1;transform:translate(0,0);}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="nav-logo" href="#">GER<span class="r">2</span><span class="g">SPAIN</span></a>
+  <div class="nav-links">
+    <a href="#nosotros">Nosotros</a>
+    <a href="#proceso">Proceso</a>
+    <a href="#calculadora">Calculadora</a>
+    <a href="#catalogo">Catálogo</a>
+    <a href="#opiniones">Opiniones</a>
+    <a href="#contacto">Contacto</a>
+  </div>
+  <div class="nav-right">
+    <a class="nav-ig" href="https://www.instagram.com/ger2spainauto" target="_blank">
+      <i class="ti ti-brand-instagram"></i> @ger2spainauto
+    </a>
+    <button class="nav-cta" onclick="document.getElementById('contacto').scrollIntoView({behavior:'smooth'})">
+      <i class="ti ti-video"></i> Videollamada gratis
+    </button>
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menú">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#nosotros" onclick="closeMenu()">Nosotros</a>
+  <a href="#proceso" onclick="closeMenu()">Proceso</a>
+  <a href="#calculadora" onclick="closeMenu()">Calculadora</a>
+  <a href="#catalogo" onclick="closeMenu()">Catálogo</a>
+  <a href="#opiniones" onclick="closeMenu()">Opiniones</a>
+  <a href="#contacto" onclick="closeMenu()">Contacto</a>
+  <div class="mobile-menu-cta">
+    <a class="nav-ig" href="https://www.instagram.com/ger2spainauto" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:6px;">
+      <i class="ti ti-brand-instagram"></i> @ger2spainauto
+    </a>
+    <button class="nav-cta" style="width:100%;justify-content:center;" onclick="closeMenu();document.getElementById('contacto').scrollIntoView({behavior:'smooth'})">
+      <i class="ti ti-video"></i> Videollamada gratis
+    </button>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <img src="https://res.cloudinary.com/dynwrmhl2/image/upload/ar_4:3,c_auto/e_brightness:22/e_contrast:level_-9;type_sigmoidal/e_saturation:25/f_jpg/q_100/102626C8-BA45-4354-8198-FE94FE51E993_ywnwof.jpg" class="hero-car" alt="GER2SPAIN AUTO — Premium Import">
+  <div class="hero-title-wrap">
+    <div class="hero-title">G<span class="g2-red">2</span><span>Spain</span></div>
+    <div class="hero-sub">Importación de coches desde Alemania a España</div>
+  </div>
+  <div class="hero-btns">
+    <button class="btn-p" onclick="document.getElementById('calculadora').scrollIntoView({behavior:'smooth'})">
+      <i class="ti ti-calculator"></i> Calcular importación
+    </button>
+    <button class="btn-s" onclick="document.getElementById('contacto').scrollIntoView({behavior:'smooth'})">
+      <i class="ti ti-video"></i> Videollamada gratis
+    </button>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat"><div class="stat-n">+50</div><div class="stat-l">Autos importados</div></div>
+  <div class="stat"><div class="stat-n">100%</div><div class="stat-l">Transparencia total</div></div>
+  <div class="stat"><div class="stat-n">5-10 días</div><div class="stat-l">Entrega en España</div></div>
+  <div class="stat"><div class="stat-n">5★</div><div class="stat-l">Valoración clientes</div></div>
+</div>
+
+<!-- SOBRE NOSOTROS -->
+<section class="about-sec" id="nosotros">
+  <h2>Quiénes somos</h2>
+  <div class="gold-line"></div>
+  <div class="about-intro">
+    <p>Somos Matías y Diego, dos amigos chilenos apasionados por el mundo automotriz. Hemos crecido ligados a los autos y contamos con amplia experiencia al volante, manejando distintos tipos de vehículos con responsabilidad y cuidado.</p>
+    <p>Después de vivir dos años en Australia, hoy nos encontramos en Alemania, donde decidimos llevar esta pasión al siguiente nivel y enfocarnos en trabajar con autos de forma seria y profesional.</p>
+    <p>Nuestro compromiso es entregar <strong>confianza y seguridad</strong> en cada servicio: tu auto está en buenas manos con nosotros.</p>
+  </div>
+  <div class="about-inner">
+    <div class="about-img-wrap">
+      <!-- 👉 REEMPLAZA ESTA URL con tu foto de imgbb cuando la tengas -->
+      <img src="https://i.ibb.co/Jjz2TNBd/IMG-9871.jpg" alt="Fundador GER2SPAIN"
+        onerror="this.style.display='none';document.getElementById('foto-placeholder').style.display='flex'">
+      <div id="foto-placeholder" style="display:flex;width:100%;height:100%;min-height:420px;align-items:center;justify-content:center;flex-direction:column;gap:10px;background:#111;">
+        <i class="ti ti-user-circle" style="font-size:60px;color:#2a2a2a;"></i>
+        <span style="font-size:12px;color:#333;">Foto del fundador</span>
+      </div>
+      <div class="about-img-overlay"></div>
+      <div class="about-img-badge">
+        <div class="name">Matias Rebolledo · Fundador</div>
+        <div class="role">🇩🇪 MÜNCHEN, ALEMANIA</div>
+      </div>
+    </div>
+    <div class="about-text">
+      <h3>Una pasión que se convirtió en <span>negocio de confianza</span></h3>
+      <p>Desde pequeño, los autos han sido una de mis mayores pasiones. A lo largo de mi vida siempre estuve ligado al mundo automotriz, pero fue en Australia donde llevé esa pasión al siguiente nivel, trabajando como valet parking en el prestigioso <strong style="color:#c9a227;">W Sydney</strong>.</p>
+      <p>Allí tuve la oportunidad de conducir todo tipo de vehículos, desde coches de lujo hasta deportivos exclusivos, llegando incluso a convertirme en encargado del área. Toda esa experiencia me motivó a crear este proyecto de importación de vehículos desde Alemania hacia España, combinando mi pasión por los coches con algo que considero fundamental: <strong style="color:#fff;">entregar confianza y seguridad a cada cliente.</strong></p>
+      <p>Hoy trabajamos para que cada vehículo llegue en las mejores manos, con experiencia real, conocimiento y dedicación en cada detalle.</p>
+      <div class="about-tags">
+        <div class="about-tag"><i class="ti ti-car"></i> Valet parking</div>
+        <div class="about-tag"><i class="ti ti-map-pin"></i> Basados en Alemania</div>
+        <div class="about-tag"><i class="ti ti-shield-check"></i> +50 importaciones</div>
+        <div class="about-tag"><i class="ti ti-star-filled"></i> 5★ valoración clientes</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="about-divider">
+
+  <!-- DIEGO ANTEQUERA -->
+  <div class="about-inner">
+    <div class="about-img-wrap landscape">
+      <img src="https://i.ibb.co/HTfBgR8y/PHOTO-2026-05-15-23-38-22.jpg" alt="Diego Antequera GER2SPAIN"
+        onerror="this.style.display='none';document.getElementById('diego-placeholder').style.display='flex'">
+      <div id="diego-placeholder" style="display:none;width:100%;height:100%;min-height:320px;align-items:center;justify-content:center;flex-direction:column;gap:10px;background:#111;">
+        <i class="ti ti-user-circle" style="font-size:60px;color:#2a2a2a;"></i>
+        <span style="font-size:12px;color:#333;">Foto de Diego</span>
+      </div>
+      <div class="about-img-overlay"></div>
+      <div class="about-img-badge">
+        <div class="name">Diego Antequera · Fundador</div>
+        <div class="role">🇩🇪 MÜNCHEN, ALEMANIA</div>
+      </div>
+    </div>
+    <div class="about-text">
+      <h3><span>Experiencia real, servicio de confianza</span></h3>
+      <p>Desde joven he tenido una fuerte pasión por el mundo automotriz. En Chile me dediqué a la compra y venta de vehículos, lo que me permitió conocer en profundidad distintos modelos y el funcionamiento del mercado, además de fortalecer mi relación con los clientes.</p>
+      <p>En Australia trabajé en una reconocida empresa de valet parking, manejando autos de alta gama y todo tipo de vehículos, lo que reforzó mi disciplina, responsabilidad y atención al detalle.</p>
+      <p>Me considero una persona constante, profesional y comprometida, con foco en el trabajo en equipo, la confianza y el crecimiento continuo. Toda esta experiencia, junto con mi pasión por los autos, me motivó a crear esta empresa junto a mi socio, con el objetivo de entregar un servicio serio, cercano y basado en la <strong style="color:#fff;">experiencia real en el rubro automotriz.</strong></p>
+      <div class="about-tags">
+        <div class="about-tag"><i class="ti ti-car"></i> Compraventa en Chile</div>
+        <div class="about-tag"><i class="ti ti-car"></i> Valet Parking</div>
+        <div class="about-tag"><i class="ti ti-map-pin"></i> Basados en Alemania</div>
+        <div class="about-tag"><i class="ti ti-shield-check"></i> +50 importaciones</div>
+        <div class="about-tag"><i class="ti ti-star-filled"></i> 5★ valoración clientes</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESO -->
+<section class="steps-sec" id="proceso">
+  <h2>¿Cómo funciona?</h2>
+  <div class="gold-line"></div>
+  <p class="sec-sub">De cero a tu coche importado en 5 pasos</p>
+  <div class="steps reveal">
+    <div class="step"><div class="step-n">1</div><h3>Encuentras tu auto</h3><p>Buscamos vehículos alemanes según tu presupuesto y preferencias exactas</p></div>
+    <div class="step"><div class="step-n">2</div><h3>Videollamada gratis</h3><p>Te guiamos en todo el proceso de importación desde Alemania a España, resolvemos tus dudas y definimos contigo el tipo de vehículo que estás buscando.</p></div>
+    <div class="step"><div class="step-n">3</div><h3>Presupuesto exacto</h3><p>Precio + transporte + IVA + homologación. Sin costes ocultos ni sorpresas</p></div>
+    <div class="step"><div class="step-n">4</div><h3>Lo gestionamos todo</h3><p>Documentación, inspección técnica y trámites aduaneros a cargo nuestro</p></div>
+    <div class="step"><div class="step-n">5</div><h3>Entrega en 5-10 días</h3><p>Tu auto llega homologado, matriculado y listo para circular en España. El plazo varía según la zona de Alemania de donde parta el vehículo</p></div>
+  </div>
+</section>
+
+<!-- CALCULADORA -->
+<section class="calc-sec" id="calculadora">
+  <h2>Calcula tu importación</h2>
+  <div class="gold-line"></div>
+  <p class="sec-sub">Elige cómo quieres calcular el coste de tu vehículo</p>
+
+  <!-- MODE SELECTOR -->
+  <div class="calc-modes" id="calc-selector">
+    <div class="calc-mode" onclick="selectCalcMode('auto',this)">
+
+      <h4>Modo automático <span class="calc-mode-badge">Recomendado</span></h4>
+      <p>Pega el link del vehículo (Mobile.de, AutoScout, etc.) y obtén un cálculo automático</p>
+    </div>
+    <div class="calc-mode" onclick="selectCalcMode('manual',this)">
+
+      <h4>Modo manual</h4>
+      <p>Introduce los datos del vehículo paso a paso</p>
+    </div>
+  </div>
+
+  <!-- URL INPUT (Modo automático) -->
+  <div id="calc-url-box" style="display:none;" class="calc-url-box">
+    <div class="calc-section-title">Link del vehículo</div>
+    <div class="field">
+      <label>URL DEL ANUNCIO (Mobile.de / AutoScout24)</label>
+      <input type="url" id="vehicle-url" placeholder="https://www.mobile.de/auto/..." style="width:100%;background:#080808;border:1px solid #2a2a2a;color:#fff;padding:10px 14px;border-radius:6px;font-size:13px;font-family:'Inter',sans-serif;">
+    </div>
+    <p>Pega el link del anuncio y completa los datos que ves en el portal para obtener tu estimación de importación.</p>
+    <button class="calc-btn" onclick="continueWithUrl()" style="margin-top:14px;"><i class="ti ti-search"></i> Analizar vehículo</button>
+  </div>
+
+  <!-- QUICK-FILL (paso 2 del modo automático) -->
+  <div id="calc-quickfill" style="display:none;" class="calc-url-box">
+    <div class="calc-section-title">Datos del anuncio — <span id="qf-portal-name" style="color:#c9a227;text-transform:none;letter-spacing:0;font-size:11px;"></span></div>
+    <p style="font-size:12px;color:#777;margin-bottom:18px;">Introduce los datos tal como aparecen en el anuncio. El sistema calculará automáticamente el coste total de importación.</p>
+    <div class="calc-grid">
+      <div class="field">
+        <label>PRECIO DEL ANUNCIO (€)</label>
+        <input type="number" id="qf-price" placeholder="Ej: 22.000" min="0">
+      </div>
+      <div class="field">
+        <label>AÑO</label>
+        <input type="number" id="qf-year" placeholder="Ej: 2021" min="2000" max="2026">
+      </div>
+      <div class="field">
+        <label>KILOMETRAJE (km)</label>
+        <input type="number" id="qf-km" placeholder="Ej: 45.000" min="0">
+      </div>
+    </div>
+    <button class="calc-btn" onclick="applyQuickFill()" style="margin-top:16px;"><i class="ti ti-calculator"></i> Calcular importación</button>
+  </div>
+
+  <div class="calc-wrap reveal" id="calc-form" style="display:none;">
+    <div class="calc-box">
+      <h3><i class="ti ti-calculator"></i> Datos de tu importación</h3>
+
+      <div class="calc-section-title">Precio del vehículo</div>
+      <div class="calc-grid">
+        <div class="field">
+          <label>PRECIO MÍNIMO (€)</label>
+          <input type="number" id="precio-min" placeholder="Ej: 15.000" min="0">
+        </div>
+        <div class="field">
+          <label>PRECIO MÁXIMO (€)</label>
+          <input type="number" id="precio-max" placeholder="Ej: 25.000" min="0">
+        </div>
+      </div>
+
+      <div class="calc-section-title">Filtros de búsqueda</div>
+      <div class="calc-grid">
+        <div class="field">
+          <label>AÑO DESDE</label>
+          <input type="number" id="anio-desde" placeholder="Ej: 2019" min="2000" max="2026">
+        </div>
+        <div class="field">
+          <label>AÑO HASTA</label>
+          <input type="number" id="anio-hasta" placeholder="Ej: 2023" min="2000" max="2026">
+        </div>
+        <div class="field">
+          <label>KILOMETRAJE DESDE</label>
+          <input type="number" id="km-desde" placeholder="Ej: 10.000" min="0">
+        </div>
+        <div class="field">
+          <label>KILOMETRAJE HASTA</label>
+          <input type="number" id="km-hasta" placeholder="Ej: 80.000" min="0">
+        </div>
+      </div>
+
+      <div class="calc-section-title">Tipo de transporte</div>
+      <div class="transport-opts">
+        <div class="transport-opt active" id="opt-camion" onclick="setTransport('camion')">
+          <i class="ti ti-truck"></i>
+          <div>
+            <div class="t-name">Camión / Portavehículos</div>
+            <div class="t-detail">800–1.800€ · Más seguro, sin km extra al vehículo</div>
+          </div>
+        </div>
+        <div class="transport-opt" id="opt-propia" onclick="setTransport('propia')">
+          <i class="ti ti-steering-wheel"></i>
+          <div>
+            <div class="t-name">Conducción propia</div>
+            <div class="t-detail">400–1.200€ · Incluye placas, seguro, combustible y peajes</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="calc-section-title">Opciones adicionales</div>
+      <label class="gestoria-check">
+        <input type="checkbox" id="gestoria" checked>
+        <span>Incluir gestoría en España (100–300€) — muy recomendado</span>
+      </label>
+
+      <button class="calc-btn" onclick="calcularV2()">
+        <i class="ti ti-calculator"></i> Calcular importación
+      </button>
+    </div>
+
+    <div class="results-v2" id="results-v2">
+      <div class="res-v2-header">
+        <span class="title">📊 Desglose por categorías</span>
+        <span class="res-v2-note">Todos los valores en €</span>
+      </div>
+
+      <div class="res-v2-cat">
+        <div class="res-v2-cat-title">🚗 Vehículo</div>
+        <div class="res-v2-row"><span class="lbl">Precio de compra</span><span class="val" id="r2-precio">—</span></div>
+      </div>
+
+      <div class="res-v2-cat" id="cat-alemania">
+        <div class="res-v2-cat-title">🇩🇪 Costes en Alemania</div>
+        <div class="res-v2-row"><span class="lbl">Baja del vehículo</span><span class="val">10–50€</span></div>
+        <div class="res-v2-row" id="row-placas"><span class="lbl">Placas de exportación</span><span class="val">100–250€</span></div>
+        <div class="res-v2-row" id="row-seguro"><span class="lbl">Seguro temporal exportación</span><span class="val">50–150€</span></div>
+        <div class="res-v2-row"><span class="lbl">Documentación</span><span class="val">50–200€</span></div>
+      </div>
+
+      <div class="res-v2-cat">
+        <div class="res-v2-cat-title">🚚 Transporte</div>
+        <div class="res-v2-row"><span class="lbl" id="r2-transp-label">Camión / Portavehículos</span><span class="val" id="r2-transp">800–1.800€</span></div>
+      </div>
+
+      <div class="res-v2-cat">
+        <div class="res-v2-cat-title">🇪🇸 Costes en España</div>
+        <div class="res-v2-row"><span class="lbl">ITV / Homologación</span><span class="val">100–300€</span></div>
+        <div class="res-v2-row"><span class="lbl">Tasa DGT</span><span class="val">50–150€</span></div>
+        <div class="res-v2-row" id="row-gestoria"><span class="lbl">Gestoría</span><span class="val">100–300€</span></div>
+      </div>
+
+      <div class="res-v2-cat">
+        <div class="res-v2-cat-title">📋 Impuesto de Matriculación (IEDMT)</div>
+        <div class="res-v2-row"><span class="lbl" id="r2-iedmt-label">Según CO₂</span><span class="val" id="r2-iedmt">—</span></div>
+      </div>
+
+      <div class="res-v2-totals">
+        <div class="res-v2-total low">
+          <div class="rlabel">Escenario bajo</div>
+          <div class="ramount" id="r2-low">—</div>
+          <div class="rnote">Estimación optimista</div>
+        </div>
+        <div class="res-v2-total mid">
+          <div class="rlabel">Estimación media</div>
+          <div class="ramount" id="r2-mid">—</div>
+          <div class="rnote">Escenario más probable</div>
+        </div>
+        <div class="res-v2-total high">
+          <div class="rlabel">Escenario alto</div>
+          <div class="ramount" id="r2-high">—</div>
+          <div class="rnote">Estimación conservadora</div>
+        </div>
+      </div>
+
+      <div class="res-v2-disclaimer">⚠️ <strong>Estimación orientativa</strong> basada en rangos reales de mercado. No incluye IVA (los precios alemanes ya lo llevan incluido para particulares). El presupuesto exacto y vinculante se facilita siempre en tu <strong>videollamada gratuita</strong>.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CATÁLOGO -->
+<section class="cat-sec" id="catalogo">
+  <h2>Busca tu coche</h2>
+  <div class="gold-line"></div>
+  <p class="sec-sub">Coches del mercado alemán — selecciona tu marca y explora los anuncios reales</p>
+
+  <div class="brand-main-tabs reveal">
+    <div class="brand-main-tab active" onclick="setCatalog('bmw',this)">BMW</div>
+    <div class="brand-main-tab" onclick="setCatalog('mercedes',this)">Mercedes</div>
+    <div class="brand-main-tab" onclick="setCatalog('audi',this)">Audi</div>
+    <div class="brand-main-tab" onclick="setCatalog('volkswagen',this)">Volkswagen</div>
+    <div class="brand-main-tab" onclick="setCatalog('porsche',this)">Porsche</div>
+    <button class="brand-otros-btn" id="otros-btn" onclick="toggleOtros()">Otros <i class="ti ti-chevron-down"></i></button>
+  </div>
+
+  <div class="brand-otros-panel" id="otros-panel">
+    <div class="brand-sec-tab" onclick="setCatalog('toyota',this)">Toyota</div>
+    <div class="brand-sec-tab" onclick="setCatalog('renault',this)">Renault</div>
+    <div class="brand-sec-tab" onclick="setCatalog('peugeot',this)">Peugeot</div>
+    <div class="brand-sec-tab" onclick="setCatalog('opel',this)">Opel</div>
+    <div class="brand-sec-tab" onclick="setCatalog('skoda',this)">Skoda</div>
+    <div class="brand-sec-tab" onclick="setCatalog('ford',this)">Ford</div>
+    <div class="brand-sec-tab" onclick="setCatalog('seat',this)">Seat / Cupra</div>
+    <div class="brand-sec-tab" onclick="setCatalog('kia',this)">Kia / Hyundai</div>
+    <div class="brand-sec-tab" onclick="setCatalog('volvo',this)">Volvo</div>
+  </div>
+
+  <div class="car-grid" id="car-grid"></div>
+
+  <div style="text-align:center;margin-top:24px;display:flex;justify-content:center;gap:12px;flex-wrap:wrap;">
+    <a id="link-autoscout" href="https://www.autoscout24.de/lst/bmw?atype=C&cy=D&damaged_listing=exclude" target="_blank" class="btn-p">
+      <i class="ti ti-external-link"></i> Ver más en AutoScout24 🇩🇪
+    </a>
+    <a id="link-mobile" href="https://suchen.mobile.de/fahrzeuge/search.html?isSearchRequest=true&ms=3500%3B%3B%3B&sb=rel&vc=Car" target="_blank" class="btn-s">
+      <i class="ti ti-external-link"></i> Ver más en Mobile.de 🇩🇪
+    </a>
+  </div>
+
+  <div class="cat-portals-wrap">
+    <div class="cat-portals">
+      <div class="cat-card" onclick="document.getElementById('contacto').scrollIntoView({behavior:'smooth'})" style="border-color:#d62d20;">
+        <div class="ico">🎯</div>
+        <h3>Búsqueda personalizada</h3>
+        <p>Dinos exactamente qué quieres y lo encontramos nosotros en Alemania</p>
+        <div class="arrow" style="color:#d62d20;">Contáctanos →</div>
+      </div>
+      <a class="cat-card" href="https://www.autoscout24.de/?atype=C&cy=D" target="_blank">
+        <div class="ico">🚗</div>
+        <h3>AutoScout24 Alemania</h3>
+        <p>Mayor portal europeo — millones de vehículos en el mercado alemán</p>
+        <div class="arrow">Explorar →</div>
+      </a>
+      <a class="cat-card" href="https://www.mobile.de" target="_blank">
+        <div class="ico">🇩🇪</div>
+        <h3>Mobile.de</h3>
+        <p>El portal líder del mercado alemán</p>
+        <div class="arrow">Explorar →</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIOS -->
+<section class="test-sec" id="opiniones">
+  <h2>Lo que dicen nuestros clientes</h2>
+  <div class="gold-line"></div>
+  <p class="sec-sub">Más de 50 importaciones exitosas — valoración media de 5★</p>
+  <div class="test-grid reveal">
+    <div class="test-card">
+      <div class="test-stars">★★★★★</div>
+      <div class="test-text">"Increíble experiencia. Me ahorraron más de 8.000€ respecto al precio en España y el coche llegó impecable. La videollamada desde Alemania me dio total confianza."</div>
+      <div class="test-author">
+        <div><div class="test-name">Carlos M.</div><div class="test-detail">Madrid — BMW M4 Competition</div></div>
+        <div class="test-saving"><div class="s-amt">-8.200€</div><div class="s-lbl">ahorro</div></div>
+      </div>
+    </div>
+    <div class="test-card">
+      <div class="test-stars">★★★★★</div>
+      <div class="test-text">"Al principio tenía miedo de importar, pero el equipo me acompañó en cada paso. Transparencia total con los costes y el coche llegó exactamente como me lo mostraron."</div>
+      <div class="test-author">
+        <div><div class="test-name">Laura G.</div><div class="test-detail">Barcelona — Audi RS3 Sportback</div></div>
+        <div class="test-saving"><div class="s-amt">-6.500€</div><div class="s-lbl">ahorro</div></div>
+      </div>
+    </div>
+    <div class="test-card">
+      <div class="test-stars">★★★★★</div>
+      <div class="test-text">"Segundo coche que importo con ellos. El primero fue un BMW Serie 5 y quedé tan contento que repetí. Servicio 10/10, siempre disponibles por WhatsApp."</div>
+      <div class="test-author">
+        <div><div class="test-name">Miguel Á.</div><div class="test-detail">Valencia — Mercedes-AMG C63</div></div>
+        <div class="test-saving"><div class="s-amt">-11.000€</div><div class="s-lbl">ahorro</div></div>
+      </div>
+    </div>
+    <div class="test-card">
+      <div class="test-stars">★★★★★</div>
+      <div class="test-text">"Buscaba un Porsche Macan con presupuesto ajustado. Lo encontraron en Múnich con 30.000 km menos que los de aquí y por mucho menos dinero."</div>
+      <div class="test-author">
+        <div><div class="test-name">Javier R.</div><div class="test-detail">Sevilla — Porsche Macan S</div></div>
+        <div class="test-saving"><div class="s-amt">-9.800€</div><div class="s-lbl">ahorro</div></div>
+      </div>
+    </div>
+    <div class="test-card">
+      <div class="test-stars">★★★★★</div>
+      <div class="test-text">"Lo que más valoro es la honestidad. Me dijeron que un coche tenía un detalle en la pintura y me buscaron otro mejor. Eso es profesionalidad de verdad."</div>
+      <div class="test-author">
+        <div><div class="test-name">Andrea P.</div><div class="test-detail">Bilbao — BMW X3 M40i</div></div>
+        <div class="test-saving"><div class="s-amt">-7.100€</div><div class="s-lbl">ahorro</div></div>
+      </div>
+    </div>
+    <div class="test-card">
+      <div class="test-stars">★★★★★</div>
+      <div class="test-text">"Todo muy fluido. Desde la búsqueda hasta tener el coche matriculado pasaron solo 4 días. Precio final exacto al presupuesto inicial. Muy recomendable."</div>
+      <div class="test-author">
+        <div><div class="test-name">David S.</div><div class="test-detail">Málaga — Audi A5 Sportback</div></div>
+        <div class="test-saving"><div class="s-amt">-5.400€</div><div class="s-lbl">ahorro</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACTO -->
+<section class="contact-sec" id="contacto">
+  <h2>Contáctanos</h2>
+  <div class="gold-line"></div>
+  <div class="contact-cards reveal">
+    <a class="cc" href="#" onclick="openWA();return false;">
+      <div class="cc-icon cc-wa"><i class="ti ti-brand-whatsapp"></i></div>
+      <h3>WhatsApp</h3>
+      <p>+49 177 180 0435<br>Respuesta rápida desde Alemania</p>
+    </a>
+    <div class="cc" onclick="document.getElementById('vcall').scrollIntoView({behavior:'smooth'})">
+      <div class="cc-icon cc-vid"><i class="ti ti-video"></i></div>
+      <h3>Videollamada gratis</h3>
+      <p>Te ayudamos a entender tu caso de importación desde Alemania, resolvemos tus dudas y te explicamos todo el proceso paso a paso.</p>
+    </div>
+    <a class="cc" href="https://www.instagram.com/ger2spainauto" target="_blank">
+      <div class="cc-icon cc-ig"><i class="ti ti-brand-instagram"></i></div>
+      <h3>Instagram</h3>
+      <p>@ger2spainauto<br>Síguenos y descubre cómo importamos autos desde Alemania a España paso a paso.</p>
+    </a>
+  </div>
+  <div class="vcall reveal" id="vcall">
+    <h3><i class="ti ti-video"></i> Reserva tu videollamada gratuita</h3>
+    <p>Te ayudamos a definir el auto ideal para importar desde Alemania. En la llamada entendemos lo que buscas, te explicamos el proceso completo y te damos un estimado de coste sin compromiso.</p>
+    <button class="vcall-cta" onclick="openCalModal()">
+      <i class="ti ti-calendar-event"></i> Reservar videollamada gratis
+    </button>
+  </div>
+
+  <!-- Modal calendario -->
+  <div id="cal-modal" onclick="if(event.target===this)closeCalModal()" style="display:none;position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,0.88);align-items:center;justify-content:center;padding:16px;">
+    <div style="background:#0f0f0f;border:1px solid rgba(201,162,39,.4);border-radius:12px;width:100%;max-width:680px;max-height:90vh;overflow:hidden;position:relative;display:flex;flex-direction:column;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid #1a1a1a;flex-shrink:0;">
+        <span style="font-family:'Rajdhani',sans-serif;font-weight:700;color:#c9a227;font-size:15px;"><i class="ti ti-calendar-event"></i> &nbsp;Elige tu fecha y hora</span>
+        <button onclick="closeCalModal()" style="background:none;border:none;color:#666;font-size:22px;cursor:pointer;line-height:1;padding:0 4px;">&times;</button>
+      </div>
+      <iframe id="cal-iframe"
+        src="about:blank"
+        data-src="https://calendly.com/ignaciomatias388/30min?background_color=0f0f0f&text_color=cccccc&primary_color=c9a227"
+        style="border:none;width:100%;height:660px;flex-shrink:0;"
+        title="Reservar videollamada">
+      </iframe>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-inner">
+    <div class="footer-logo">GER<span style="color:#d62d20">2</span>SPAIN AUTO</div>
+    <div class="footer-links">
+      <a href="#nosotros">Nosotros</a>
+      <a href="#proceso">Proceso</a>
+      <a href="#calculadora">Calculadora</a>
+      <a href="#catalogo">Catálogo</a>
+      <a href="#contacto">Contacto</a>
+    </div>
+    <div class="footer-social">
+      <a class="fsoc" href="#" onclick="openWA();return false;"><i class="ti ti-brand-whatsapp"></i></a>
+      <a class="fsoc" href="https://www.instagram.com/ger2spainauto" target="_blank"><i class="ti ti-brand-instagram"></i></a>
+    </div>
+  </div>
+  <div class="footer-copy">🇩🇪 ——🚗—— 🇪🇸 &nbsp;|&nbsp; Importamos tu pasión, entregamos confianza.</div>
+  <div class="footer-copy" style="margin-top:8px;border-top:none;padding-top:0;">© 2026 G2 Spain Auto. Todos los derechos reservados.</div>
+</div>
+
+<!-- BOTÓN FLOTANTE WHATSAPP -->
+<a class="wa-float" href="#" onclick="openWA();return false;" aria-label="WhatsApp">
+  <i class="ti ti-brand-whatsapp"></i>
+</a>
+
+<script>
+function openWA(){
+  var msg='Hola, me gustaría importar un auto desde Alemania a España. Quisiera saber el precio estimado, los tiempos de entrega y el proceso completo. ¿Me puedes ayudar?';
+  window.open('https://wa.me/491771800435?text='+encodeURIComponent(msg),'_blank');
+}
+
+function selectCalcMode(mode, el){
+  document.querySelectorAll('.calc-mode').forEach(function(m){m.classList.remove('selected');});
+  if(el) el.classList.add('selected');
+  var urlBox=document.getElementById('calc-url-box');
+  var form=document.getElementById('calc-form');
+  if(mode==='auto'){
+    urlBox.style.display='block';
+    form.style.display='none';
+    urlBox.scrollIntoView({behavior:'smooth',block:'nearest'});
+  } else {
+    urlBox.style.display='none';
+    form.style.display='flex';
+    form.style.flexDirection='column';
+    setTimeout(function(){form.scrollIntoView({behavior:'smooth',block:'nearest'});},100);
+  }
+}
+function continueWithUrl(){
+  var url=document.getElementById('vehicle-url').value.trim();
+  if(!url){alert('Introduce el link del anuncio primero');return;}
+  var portal='el portal';
+  if(url.indexOf('mobile.de')!==-1) portal='Mobile.de';
+  else if(url.indexOf('autoscout24')!==-1) portal='AutoScout24';
+  else if(url.indexOf('coches.net')!==-1) portal='Coches.net';
+  var yearMatch=url.match(/(20[0-2]\d)/);
+  document.getElementById('qf-portal-name').textContent=portal;
+  if(yearMatch) document.getElementById('qf-year').value=yearMatch[1];
+  document.getElementById('calc-url-box').style.display='none';
+  var qf=document.getElementById('calc-quickfill');
+  qf.style.display='block';
+  setTimeout(function(){qf.scrollIntoView({behavior:'smooth',block:'nearest'});},100);
+}
+function applyQuickFill(){
+  var price=parseFloat(document.getElementById('qf-price').value)||0;
+  var yr=document.getElementById('qf-year').value;
+  var km=document.getElementById('qf-km').value;
+  if(price<=0){alert('Introduce el precio del anuncio para continuar');return;}
+  document.getElementById('precio-min').value=price;
+  document.getElementById('precio-max').value=price;
+  if(yr){document.getElementById('anio-desde').value=yr;document.getElementById('anio-hasta').value=yr;}
+  if(km){document.getElementById('km-desde').value=0;document.getElementById('km-hasta').value=km;}
+  document.getElementById('calc-quickfill').style.display='none';
+  var form=document.getElementById('calc-form');
+  form.style.display='flex';form.style.flexDirection='column';
+  calcularV2();
+  setTimeout(function(){document.getElementById('results-v2').scrollIntoView({behavior:'smooth'});},200);
+}
+
+function openCalModal(){
+  var modal=document.getElementById('cal-modal');
+  var iframe=document.getElementById('cal-iframe');
+  if(iframe.src==='about:blank') iframe.src=iframe.dataset.src;
+  modal.style.display='flex';
+  document.body.style.overflow='hidden';
+}
+function closeCalModal(){
+  document.getElementById('cal-modal').style.display='none';
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeCalModal();});
+
+function shuffle(arr){
+  var a=[...arr];
+  for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}
+  return a;
+}
+
+function toggleOtros(){
+  const panel=document.getElementById('otros-panel');
+  const btn=document.getElementById('otros-btn');
+  panel.classList.toggle('open');
+  btn.innerHTML=panel.classList.contains('open')
+    ?'Otros <i class="ti ti-chevron-up"></i>'
+    :'Otros <i class="ti ti-chevron-down"></i>';
+}
+
+function toggleMenu(){
+  const m=document.getElementById('mobile-menu');
+  const h=document.getElementById('hamburger');
+  m.classList.toggle('open');
+  h.classList.toggle('open');
+}
+function closeMenu(){
+  document.getElementById('mobile-menu').classList.remove('open');
+  document.getElementById('hamburger').classList.remove('open');
+}
+
+function fmt(n){return new Intl.NumberFormat('es-ES',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(n);}
+
+let transportMode='camion';
+function setTransport(mode){
+  transportMode=mode;
+  document.getElementById('opt-camion').classList.toggle('active',mode==='camion');
+  document.getElementById('opt-propia').classList.toggle('active',mode==='propia');
+  if(mode==='camion'){
+    document.getElementById('row-placas').style.display='';
+    document.getElementById('row-seguro').style.display='';
+    document.getElementById('r2-transp-label').textContent='Camión / Portavehículos';
+    document.getElementById('r2-transp').textContent='800–1.800€';
+  } else {
+    document.getElementById('row-placas').style.display='none';
+    document.getElementById('row-seguro').style.display='none';
+    document.getElementById('r2-transp-label').textContent='Conducción propia (placas, seguro, comb., peajes incluidos)';
+    document.getElementById('r2-transp').textContent='400–1.200€';
+  }
+}
+
+function estimarCO2(precioMed, anioMed){
+  let base;
+  if(precioMed<15000) base=112;
+  else if(precioMed<25000) base=135;
+  else if(precioMed<40000) base=158;
+  else if(precioMed<60000) base=185;
+  else base=210;
+  if(anioMed>=2022) base=Math.round(base*0.91);
+  else if(anioMed>=2019) base=Math.round(base*0.96);
+  return base;
+}
+
+function calcularV2(){
+  const precioMin=parseFloat(document.getElementById('precio-min').value)||0;
+  const precioMax=parseFloat(document.getElementById('precio-max').value)||0;
+  const anioDesde=parseInt(document.getElementById('anio-desde').value)||0;
+  const anioHasta=parseInt(document.getElementById('anio-hasta').value)||0;
+  const kmDesde=parseInt(document.getElementById('km-desde').value)||0;
+  const kmHasta=parseInt(document.getElementById('km-hasta').value)||0;
+  const conGestoria=document.getElementById('gestoria').checked;
+
+  if(precioMin<=0&&precioMax<=0){alert('Introduce al menos el precio mínimo o máximo del vehículo');return;}
+  const pMin=precioMin>0?precioMin:precioMax;
+  const pMax=precioMax>0?precioMax:precioMin;
+  if(pMin>pMax){alert('El precio mínimo no puede ser mayor al precio máximo');return;}
+  const pMed=Math.round((pMin+pMax)/2);
+  const anioMed=anioDesde&&anioHasta?Math.round((anioDesde+anioHasta)/2):anioDesde||anioHasta||2020;
+
+  // CO2 estimado automáticamente (nunca visible para el usuario)
+  const co2Estimado=estimarCO2(pMed,anioMed);
+
+  // Ranges [min, med, max]
+  const baja=[10,30,50];
+  const docs=[50,125,200];
+  const itv=[100,200,300];
+  const dgt=[50,100,150];
+  const gestoria=conGestoria?[100,200,300]:[0,0,0];
+  let placas,seguro,transp;
+  if(transportMode==='camion'){
+    placas=[100,175,250]; seguro=[50,100,150]; transp=[800,1300,1800];
+  } else {
+    placas=[0,0,0]; seguro=[0,0,0]; transp=[400,800,1200];
+  }
+
+  // Ajuste por kilometraje
+  const kmRef=kmHasta||kmDesde||0;
+  const kmSurcharge=kmRef>150000?[150,250,400]:kmRef>80000?[0,100,200]:[0,0,0];
+
+  // Ajuste por antigüedad del vehículo
+  const yearRef=anioDesde||anioHasta||2020;
+  const yearSurcharge=yearRef<2015?[100,200,350]:[0,0,0];
+
+  // IEDMT según CO2 estimado
+  let pct=0;
+  if(co2Estimado<120) pct=0;
+  else if(co2Estimado<=159) pct=0.0475;
+  else if(co2Estimado<=199) pct=0.0975;
+  else pct=0.1475;
+
+  const iedmtMin=Math.round(pMin*pct);
+  const iedmtMed=Math.round(pMed*pct);
+  const iedmtMax=Math.round(pMax*pct);
+
+  const total=(i,p,iedmt)=>p+baja[i]+placas[i]+seguro[i]+docs[i]+transp[i]+itv[i]+dgt[i]+gestoria[i]+iedmt+kmSurcharge[i]+yearSurcharge[i];
+
+  const priceLabel=pMin===pMax?fmt(pMin):`${fmt(pMin)} – ${fmt(pMax)}`;
+  document.getElementById('r2-precio').textContent=priceLabel;
+  document.getElementById('r2-iedmt-label').textContent=pct===0
+    ?`Exento (0%) — CO₂ estimado < 120 g/km`
+    :`${(pct*100).toFixed(2)}% sobre precio (CO₂ estimado: ~${co2Estimado} g/km)`;
+  document.getElementById('r2-iedmt').textContent=pct===0?'0 €':`${fmt(iedmtMin)} – ${fmt(iedmtMax)}`;
+  document.getElementById('row-gestoria').style.display=conGestoria?'':'none';
+  document.getElementById('r2-low').textContent=fmt(total(0,pMin,iedmtMin));
+  document.getElementById('r2-mid').textContent=fmt(total(1,pMed,iedmtMed));
+  document.getElementById('r2-high').textContent=fmt(total(2,pMax,iedmtMax));
+  document.getElementById('results-v2').classList.add('show');
+  setTimeout(()=>document.getElementById('results-v2').scrollIntoView({behavior:'smooth'}),100);
+}
+
+const W='https://commons.wikimedia.org/wiki/Special:FilePath/';
+/* Imagen de respaldo garantizada por marca (todas verificadas en Commons) */
+const BF={
+  bmw:       W+'BMW_M4_(G82)_Mint_Green_IAA_2021_1X7A0002.jpg',
+  mercedes:  W+'Mercedes_A-Klasse_front.JPG',
+  audi:      W+'Audi_A3_Sportback_8V_(front).JPG',
+  volkswagen:W+'VW_Golf_GTI_(VIII)_–_f_03012021.jpg',
+  porsche:   W+'Porsche_Macan_(2015)_from_Stuttgart.JPG',
+  toyota:    W+'Toyota_Yaris_front.JPG',
+  renault:   W+'Renault_Clio_III_20090527_front.JPG',
+  peugeot:   W+'The_frontview_of_Peugeot_208_GTi.JPG',
+  opel:      W+'Opel_Corsa_D_OPC_front.JPG',
+  skoda:     W+'Skoda_Octavia.JPG',
+  ford:      W+'Ford_Mustang_GT.JPG',
+  seat:      W+'Seat_Ibiza_6J.JPG',
+  kia:       W+'Kia_Picanto_front.JPG',
+  volvo:     W+'Volvo_V40_Facelift.JPG',
+};
+
+const catalogData={
+  bmw:{
+    as:'https://www.autoscout24.de/lst/bmw?atype=C&cy=D&damaged_listing=exclude',
+    mob:'https://suchen.mobile.de/fahrzeuge/search.html?isSearchRequest=true&ms=3500%3B%3B%3B&sb=rel&vc=Car',
+    cars:[
+      {model:'BMW 116i Hatchback',year:2020,km:'52.000 km',fuel:'Gasolina · 109 CV',price:'14.900 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/BMW_1er_(E87)_front.JPG',portal:'Mobile.de'},
+      {model:'BMW 320i M-Sport',year:2021,km:'38.000 km',fuel:'Gasolina · 184 CV',price:'24.500 €',img:W+'BMW_320d_Facelift_Front.JPG',portal:'AutoScout24'},
+      {model:'BMW X3 xDrive20d',year:2021,km:'41.000 km',fuel:'Diésel · 190 CV',price:'32.900 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/BMW_X3_F25.JPG',portal:'Mobile.de'},
+      {model:'BMW M4 Competition',year:2022,km:'18.000 km',fuel:'Gasolina · 510 CV',price:'62.000 €',img:W+'BMW_M4_(G82)_Mint_Green_IAA_2021_1X7A0002.jpg',portal:'AutoScout24'},
+    ]
+  },
+  mercedes:{
+    as:'https://www.autoscout24.de/lst/mercedes-benz?atype=C&cy=D&damaged_listing=exclude',
+    mob:'https://suchen.mobile.de/fahrzeuge/search.html?isSearchRequest=true&ms=17200%3B%3B%3B&sb=rel&vc=Car',
+    cars:[
+      {model:'Mercedes Clase A 180',year:2020,km:'48.000 km',fuel:'Gasolina · 136 CV',price:'16.500 €',img:W+'Mercedes_A-Klasse_front.JPG',portal:'Mobile.de'},
+      {model:'Mercedes Clase C 220d',year:2021,km:'35.000 km',fuel:'Diésel · 194 CV',price:'26.900 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/Mercedes-Benz_W206_C_300_4MATIC_AMG_Line_Graphite_Grey_(2).jpg',portal:'AutoScout24'},
+      {model:'Mercedes GLC 300 4MATIC',year:2022,km:'22.000 km',fuel:'Gasolina · 258 CV',price:'39.500 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/Mercedes-Benz_GLS_350d_4MATIC_Sports_(X166)_front.JPG',portal:'Mobile.de'},
+      {model:'Mercedes-AMG C63 S',year:2021,km:'29.000 km',fuel:'Gasolina · 510 CV',price:'67.000 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/Mercedes-Benz_C-Class_W205_JPN_003.JPG',portal:'AutoScout24'},
+    ]
+  },
+  audi:{
+    as:'https://www.autoscout24.de/lst/audi?atype=C&cy=D&damaged_listing=exclude',
+    mob:'https://suchen.mobile.de/fahrzeuge/search.html?isSearchRequest=true&ms=1900%3B%3B%3B&sb=rel&vc=Car',
+    cars:[
+      {model:'Audi A3 Sportback 30 TFSI',year:2020,km:'55.000 km',fuel:'Gasolina · 116 CV',price:'15.900 €',img:W+'Audi_A3_Sportback_8V_(front).JPG',portal:'Mobile.de'},
+      {model:'Audi A4 Avant 35 TDI',year:2021,km:'42.000 km',fuel:'Diésel · 163 CV',price:'25.500 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/Audi_A3_Sportback_2.0_TDI_Facelift_front.JPG',portal:'AutoScout24'},
+      {model:'Audi Q5 40 TDI S-Line',year:2022,km:'28.000 km',fuel:'Diésel · 204 CV',price:'37.900 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/Audi_A3_Sportback_8V_(front).JPG',portal:'Mobile.de'},
+      {model:'Audi RS3 Sportback',year:2022,km:'14.000 km',fuel:'Gasolina · 400 CV',price:'51.000 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/Audi_RS3_Sportback_Daytonagrau.JPG',portal:'AutoScout24'},
+    ]
+  },
+  volkswagen:{
+    as:'https://www.autoscout24.de/lst/volkswagen?atype=C&cy=D&damaged_listing=exclude',
+    mob:'https://suchen.mobile.de/fahrzeuge/search.html?isSearchRequest=true&ms=24100%3B%3B%3B&sb=rel&vc=Car',
+    cars:[
+      {model:'VW Polo 1.0 TSI Comfortline',year:2020,km:'58.000 km',fuel:'Gasolina · 95 CV',price:'12.900 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/VW_Polo_TSI_Comfortline_(6R)_front.JPG',portal:'Mobile.de'},
+      {model:'VW Golf 1.5 TSI Life',year:2021,km:'36.000 km',fuel:'Gasolina · 130 CV',price:'19.800 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/Volkswagen_Golf_VII_GTI_front.JPG',portal:'AutoScout24'},
+      {model:'VW Golf GTI Performance',year:2022,km:'21.000 km',fuel:'Gasolina · 245 CV',price:'29.500 €',img:W+'VW_Golf_GTI_(VIII)_–_f_03012021.jpg',portal:'Mobile.de'},
+      {model:'VW Golf R 4Motion',year:2022,km:'15.000 km',fuel:'Gasolina · 320 CV',price:'38.900 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/VW_Golf_VII_R_Variant_4Motion_2.0_TSI_DSG.JPG',portal:'AutoScout24'},
+    ]
+  },
+  porsche:{
+    as:'https://www.autoscout24.de/lst/porsche?atype=C&cy=D&damaged_listing=exclude',
+    mob:'https://suchen.mobile.de/fahrzeuge/search.html?isSearchRequest=true&ms=20000%3B%3B%3B&sb=rel&vc=Car',
+    cars:[
+      {model:'Porsche Macan 2.0',year:2020,km:'52.000 km',fuel:'Gasolina · 245 CV',price:'38.500 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/Porsche_Macan_(2015)_from_Stuttgart.JPG',portal:'Mobile.de'},
+      {model:'Porsche Macan S',year:2021,km:'34.000 km',fuel:'Gasolina · 354 CV',price:'52.000 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/Porsche_Macan_(2015)_at_Wolfsburg.JPG',portal:'AutoScout24'},
+      {model:'Porsche Cayenne 3.0',year:2021,km:'38.000 km',fuel:'Gasolina · 340 CV',price:'65.000 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/Porsche_Macan_(2015)_from_Stuttgart.JPG',portal:'Mobile.de'},
+      {model:'Porsche 911 Carrera',year:2020,km:'28.000 km',fuel:'Gasolina · 385 CV',price:'88.000 €',img:W+'Porsche_911_GT2_Front.JPG',portal:'AutoScout24'},
+    ]
+  },
+  toyota:{as:'https://www.autoscout24.de/lst/toyota?atype=C&cy=D',mob:'https://suchen.mobile.de/fahrzeuge/search.html?isSearchRequest=true&ms=23600%3B%3B%3B&sb=rel&vc=Car',
+    cars:[
+      {model:'Toyota Yaris 1.5 Hybrid',year:2021,km:'32.000 km',fuel:'Híbrido · 116 CV',price:'14.900 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/Toyota_Yaris_front.JPG',portal:'Mobile.de'},
+      {model:'Toyota Corolla TS Hybrid',year:2021,km:'28.000 km',fuel:'Híbrido · 184 CV',price:'22.500 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/Toyota_RAV4_001.JPG',portal:'AutoScout24'},
+      {model:'Toyota RAV4 Hybrid',year:2022,km:'24.000 km',fuel:'Híbrido · 222 CV',price:'32.900 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/Toyota_RAV4_001.JPG',portal:'Mobile.de'},
+      {model:'Toyota GR86',year:2022,km:'12.000 km',fuel:'Gasolina · 234 CV',price:'31.500 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/Toyota_Yaris_front.JPG',portal:'AutoScout24'},
+    ]},
+  renault:{as:'https://www.autoscout24.de/lst/renault?atype=C&cy=D',mob:'https://suchen.mobile.de/fahrzeuge/search.html?isSearchRequest=true&ms=20700%3B%3B%3B&sb=rel&vc=Car',
+    cars:[
+      {model:'Renault Clio 1.0 TCe',year:2021,km:'38.000 km',fuel:'Gasolina · 90 CV',price:'11.900 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/Renault_Clio_III_20090527_front.JPG',portal:'Mobile.de'},
+      {model:'Renault Mégane RS Line',year:2021,km:'29.000 km',fuel:'Gasolina · 140 CV',price:'18.500 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/Renault_Clio-IV-Estate_Front.JPG',portal:'AutoScout24'},
+      {model:'Renault Arkana E-Tech',year:2022,km:'22.000 km',fuel:'Híbrido · 145 CV',price:'24.900 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/Renault_Clio_III_20090527_front.JPG',portal:'Mobile.de'},
+      {model:'Renault Mégane RS Trophy',year:2021,km:'19.000 km',fuel:'Gasolina · 300 CV',price:'29.500 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/Renault_Clio-IV-RS_Front.JPG',portal:'AutoScout24'},
+    ]},
+  peugeot:{as:'https://www.autoscout24.de/lst/peugeot?atype=C&cy=D',mob:'https://suchen.mobile.de/fahrzeuge/search.html?isSearchRequest=true&ms=19800%3B%3B%3B&sb=rel&vc=Car',
+    cars:[
+      {model:'Peugeot 208 1.2 PureTech',year:2021,km:'34.000 km',fuel:'Gasolina · 100 CV',price:'13.500 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/The_frontview_of_Peugeot_208_GTi.JPG',portal:'Mobile.de'},
+      {model:'Peugeot 308 Allure',year:2022,km:'21.000 km',fuel:'Gasolina · 130 CV',price:'21.900 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/Peugeot_208.JPG',portal:'AutoScout24'},
+      {model:'Peugeot 3008 GT Hybrid',year:2022,km:'25.000 km',fuel:'Híbrido · 225 CV',price:'31.900 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/The_frontview_of_Peugeot_208_GTi.JPG',portal:'Mobile.de'},
+      {model:'Peugeot 508 SW GT',year:2021,km:'30.000 km',fuel:'Gasolina · 225 CV',price:'28.500 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/Peugeot_208.JPG',portal:'AutoScout24'},
+    ]},
+  opel:{as:'https://www.autoscout24.de/lst/opel?atype=C&cy=D',mob:'https://suchen.mobile.de/fahrzeuge/search.html?isSearchRequest=true&ms=19000%3B%3B%3B&sb=rel&vc=Car',
+    cars:[
+      {model:'Opel Corsa 1.2 Edition',year:2021,km:'36.000 km',fuel:'Gasolina · 75 CV',price:'12.500 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/Opel_Corsa_D_OPC_front.JPG',portal:'Mobile.de'},
+      {model:'Opel Astra 1.5 CDTI',year:2021,km:'41.000 km',fuel:'Diésel · 122 CV',price:'18.900 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/Opel_Corsa_D_1.2_front.JPG',portal:'AutoScout24'},
+      {model:'Opel Grandland X Hybrid',year:2022,km:'24.000 km',fuel:'Híbrido · 224 CV',price:'27.500 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/Opel_Corsa_D_OPC_front.JPG',portal:'Mobile.de'},
+      {model:'Opel Astra GSe',year:2022,km:'14.000 km',fuel:'Híbrido · 225 CV',price:'28.500 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/Opel_Corsa_D_OPC_front.JPG',portal:'AutoScout24'},
+    ]},
+  skoda:{as:'https://www.autoscout24.de/lst/skoda?atype=C&cy=D',mob:'https://suchen.mobile.de/fahrzeuge/search.html?isSearchRequest=true&ms=22400%3B%3B%3B&sb=rel&vc=Car',
+    cars:[
+      {model:'Skoda Fabia 1.0 TSI',year:2021,km:'38.000 km',fuel:'Gasolina · 95 CV',price:'13.900 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/Skoda_Octavia.JPG',portal:'Mobile.de'},
+      {model:'Skoda Octavia 2.0 TDI',year:2021,km:'44.000 km',fuel:'Diésel · 150 CV',price:'21.500 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/Skoda_Octavia.JPG',portal:'AutoScout24'},
+      {model:'Skoda Kodiaq 2.0 TDI',year:2022,km:'28.000 km',fuel:'Diésel · 200 CV',price:'32.900 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/Skoda_Octavia.JPG',portal:'Mobile.de'},
+      {model:'Skoda Octavia RS',year:2022,km:'21.000 km',fuel:'Gasolina · 245 CV',price:'29.900 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/Skoda_Octavia_IV_RS_IMG_4251.jpg',portal:'AutoScout24'},
+    ]},
+  ford:{as:'https://www.autoscout24.de/lst/ford?atype=C&cy=D',mob:'https://suchen.mobile.de/fahrzeuge/search.html?isSearchRequest=true&ms=9200%3B%3B%3B&sb=rel&vc=Car',
+    cars:[
+      {model:'Ford Fiesta 1.0 EcoBoost',year:2021,km:'42.000 km',fuel:'Gasolina · 95 CV',price:'12.900 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/Ford_Mustang_GT.JPG',portal:'Mobile.de'},
+      {model:'Ford Focus 1.5 EcoBoost',year:2021,km:'35.000 km',fuel:'Gasolina · 150 CV',price:'19.500 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/Ford_Mustang_GT.JPG',portal:'AutoScout24'},
+      {model:'Ford Puma ST',year:2022,km:'14.000 km',fuel:'Gasolina · 225 CV',price:'26.800 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/Ford_Mustang_GT.JPG',portal:'Mobile.de'},
+      {model:'Ford Mustang 5.0 GT',year:2021,km:'22.000 km',fuel:'Gasolina · 450 CV',price:'42.900 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/Ford_MUSTANG_V8_GT_Coupé_Premium_(S197)_front.JPG',portal:'AutoScout24'},
+    ]},
+  seat:{as:'https://www.autoscout24.de/lst/seat?atype=C&cy=D',mob:'https://suchen.mobile.de/fahrzeuge/search.html?isSearchRequest=true&ms=21700%3B%3B%3B&sb=rel&vc=Car',
+    cars:[
+      {model:'SEAT Ibiza 1.0 TSI FR',year:2021,km:'39.000 km',fuel:'Gasolina · 110 CV',price:'13.500 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/Seat_Ibiza_6J.JPG',portal:'Mobile.de'},
+      {model:'SEAT León 1.5 TSI FR',year:2022,km:'22.000 km',fuel:'Gasolina · 150 CV',price:'21.900 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/SEAT_Ibiza_CONNECT.JPG',portal:'AutoScout24'},
+      {model:'Cupra León e-Hybrid',year:2022,km:'18.000 km',fuel:'Híbrido · 245 CV',price:'34.500 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/Seat_Ibiza_6J.JPG',portal:'Mobile.de'},
+      {model:'Cupra Formentor VZ5',year:2022,km:'12.000 km',fuel:'Gasolina · 390 CV',price:'48.900 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/Seat_Ibiza_6J.JPG',portal:'AutoScout24'},
+    ]},
+  kia:{as:'https://www.autoscout24.de/lst/kia?atype=C&cy=D',mob:'https://suchen.mobile.de/fahrzeuge/search.html?isSearchRequest=true&ms=12900%3B%3B%3B&sb=rel&vc=Car',
+    cars:[
+      {model:'Kia Picanto 1.0',year:2021,km:'36.000 km',fuel:'Gasolina · 67 CV',price:'10.900 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/Kia_Picanto_front.JPG',portal:'Mobile.de'},
+      {model:'Hyundai i20 1.0 T-GDI',year:2022,km:'24.000 km',fuel:'Gasolina · 100 CV',price:'16.500 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/Hyundai_i20_front.JPG',portal:'AutoScout24'},
+      {model:'Kia EV6 GT-Line',year:2022,km:'18.000 km',fuel:'Eléctrico · 229 CV',price:'34.900 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/Kia_Picanto_front.JPG',portal:'Mobile.de'},
+      {model:'Hyundai i30 N Performance',year:2022,km:'14.000 km',fuel:'Gasolina · 280 CV',price:'28.500 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/Hyundai_i30_1.4_Classic_Steelgrey.JPG',portal:'AutoScout24'},
+    ]},
+  volvo:{as:'https://www.autoscout24.de/lst/volvo?atype=C&cy=D',mob:'https://suchen.mobile.de/fahrzeuge/search.html?isSearchRequest=true&ms=24300%3B%3B%3B&sb=rel&vc=Car',
+    cars:[
+      {model:'Volvo V40 T3 Momentum',year:2020,km:'52.000 km',fuel:'Gasolina · 152 CV',price:'16.900 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/Volvo_V40_Facelift.JPG',portal:'Mobile.de'},
+      {model:'Volvo XC40 T4 AWD',year:2021,km:'34.000 km',fuel:'Gasolina · 211 CV',price:'28.500 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/Volvo_V40_Facelift.JPG',portal:'AutoScout24'},
+      {model:'Volvo V60 T6 AWD R-Design',year:2021,km:'38.000 km',fuel:'Gasolina · 300 CV',price:'36.900 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/2nd_generation_VOLVO_V40_T4_SE_front.JPG',portal:'Mobile.de'},
+      {model:'Volvo XC60 Polestar',year:2021,km:'31.000 km',fuel:'Gasolina · 415 CV',price:'44.500 €',img:'https://commons.wikimedia.org/wiki/Special:FilePath/Volvo_V40_Facelift.JPG',portal:'AutoScout24'},
+    ]}
+};
+
+function renderCarCard(c, as, mob, fallback){
+  const imgSrc = c.img || fallback;
+  const q = encodeURIComponent(c.model);
+  const asUrl = as + '&q=' + q;
+  const mobUrl = mob + '&q=' + q;
+  return `
+    <div class="car-listing">
+      <div class="car-listing-img">
+        <img src="${imgSrc}" alt="${c.model}" loading="lazy"
+             onerror="this.onerror=null;this.src='${fallback}'">
+        <div class="car-listing-badge">${c.year}</div>
+        <div class="car-listing-portal">${c.portal}</div>
+      </div>
+      <div class="car-listing-body">
+        <div class="car-listing-model">${c.model}</div>
+        <div class="car-listing-meta">
+          <span><i class="ti ti-road"></i> ${c.km}</span>
+          <span><i class="ti ti-engine"></i> ${c.fuel}</span>
+        </div>
+        <div class="car-listing-price">${c.price}</div>
+        <div class="car-listing-ctas">
+          <a href="${asUrl}" target="_blank" class="car-listing-cta"><i class="ti ti-external-link"></i> AutoScout24</a>
+          <a href="${mobUrl}" target="_blank" class="car-listing-cta"><i class="ti ti-external-link"></i> Mobile.de</a>
+        </div>
+      </div>
+    </div>`;
+}
+
+function setCatalog(brand, el){
+  document.querySelectorAll('.brand-main-tab,.brand-sec-tab').forEach(t=>t.classList.remove('active'));
+  if(el) el.classList.add('active');
+  const data=catalogData[brand];
+  if(!data) return;
+  document.getElementById('link-autoscout').href=data.as;
+  document.getElementById('link-mobile').href=data.mob;
+  const fallback=BF[brand]||BF.bmw;
+  const grid=document.getElementById('car-grid');
+  grid.innerHTML=shuffle(data.cars).map(c=>renderCarCard(c,data.as,data.mob,fallback)).join('');
+}
+
+setCatalog('bmw', document.querySelector('.brand-main-tab'));
+
+// ── Advanced scroll animations ──
+(function(){
+  'use strict';
+
+  // Helper: assign data-anim + optional delay to an element
+  function anim(el, type, delay){
+    el.setAttribute('data-anim', type || 'fade-up');
+    if(delay) el.setAttribute('data-delay', String(delay));
+  }
+
+  // ── Section headings & dividers ──
+  document.querySelectorAll('section h2, .about-sec h2').forEach(function(el){
+    anim(el, 'fade-up');
+  });
+  document.querySelectorAll('.gold-line').forEach(function(el){
+    anim(el, 'fade-up', 80);
+  });
+  document.querySelectorAll('.sec-sub').forEach(function(el){
+    anim(el, 'fade-up', 150);
+  });
+
+  // ── Stats bar — staggered ──
+  document.querySelectorAll('.stat').forEach(function(el, i){
+    anim(el, 'fade-up', i * 90);
+  });
+
+  // ── Process steps — staggered, remove parent .reveal so children animate individually ──
+  var stepsWrap = document.querySelector('.steps.reveal');
+  if(stepsWrap) stepsWrap.classList.remove('reveal');
+  document.querySelectorAll('.step').forEach(function(el, i){
+    anim(el, 'fade-up', i * 100);
+  });
+
+  // ── Calculator section header ──
+  var calcSec = document.querySelector('.calc-sec');
+  if(calcSec){
+    var calcModes = calcSec.querySelector('.calc-modes');
+    if(calcModes) anim(calcModes, 'fade-up', 120);
+  }
+
+  // ── About intro paragraphs ──
+  document.querySelectorAll('.about-intro p').forEach(function(el, i){
+    anim(el, 'fade-up', i * 100);
+  });
+
+  // ── About inner blocks — alternating left/right ──
+  document.querySelectorAll('.about-inner').forEach(function(block, i){
+    var imgWrap = block.querySelector('.about-img-wrap');
+    var txt = block.querySelector('.about-text');
+    if(imgWrap) anim(imgWrap, i % 2 === 0 ? 'fade-left' : 'fade-right');
+    if(txt)     anim(txt,     i % 2 === 0 ? 'fade-right' : 'fade-left', 120);
+  });
+
+  // ── About tags ──
+  document.querySelectorAll('.about-tag').forEach(function(el, i){
+    anim(el, 'fade-up', 60 + i * 60);
+  });
+
+  // ── Catalog tabs & portal cards ──
+  var brandTabs = document.querySelector('.brand-main-tabs.reveal');
+  if(brandTabs) brandTabs.classList.remove('reveal');
+  anim(document.querySelector('.brand-main-tabs') || document.createElement('div'), 'fade-up', 80);
+  document.querySelectorAll('.cat-card').forEach(function(el, i){
+    anim(el, 'fade-up', i * 110);
+  });
+
+  // ── Testimonials — staggered, remove parent .reveal ──
+  var testGrid = document.querySelector('.test-grid.reveal');
+  if(testGrid) testGrid.classList.remove('reveal');
+  document.querySelectorAll('.test-card').forEach(function(el, i){
+    anim(el, 'fade-up', i * 75);
+  });
+
+  // ── Contact cards — staggered, remove parent .reveal ──
+  var contactCards = document.querySelector('.contact-cards.reveal');
+  if(contactCards) contactCards.classList.remove('reveal');
+  document.querySelectorAll('.cc').forEach(function(el, i){
+    anim(el, 'fade-up', i * 100);
+  });
+
+  // ── Vcall section ──
+  var vcall = document.querySelector('.vcall.reveal');
+  if(vcall) vcall.classList.remove('reveal');
+  var vcallEl = document.getElementById('vcall');
+  if(vcallEl) anim(vcallEl, 'fade-up', 60);
+
+  // ── Main observer for [data-anim] elements ──
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(!e.isIntersecting) return;
+      var el = e.target;
+      var delay = parseInt(el.getAttribute('data-delay') || '0', 10);
+      setTimeout(function(){ el.classList.add('anim-in'); }, delay);
+      io.unobserve(el);
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -32px 0px' });
+
+  document.querySelectorAll('[data-anim]').forEach(function(el){ io.observe(el); });
+
+  // ── Keep legacy .reveal elements working (calc-wrap, brand-main-tabs remaining) ──
+  var io2 = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('visible'); io2.unobserve(e.target); }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(function(el){ io2.observe(el); });
+
+  // ── Counter animation for stat numbers ──
+  function animCounter(el){
+    var raw = el.textContent.trim();
+    var match = raw.match(/^([+]?)(\d+(?:\.\d+)?)(.*)$/);
+    if(!match) return;
+    var prefix = match[1], num = parseFloat(match[2]), suffix = match[3];
+    var duration = 1100, start = null;
+    function tick(ts){
+      if(!start) start = ts;
+      var p = Math.min((ts - start) / duration, 1);
+      var ease = 1 - Math.pow(1 - p, 3);
+      el.textContent = prefix + Math.round(ease * num) + suffix;
+      if(p < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+  var cio = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ animCounter(e.target); cio.unobserve(e.target); }
+    });
+  }, { threshold: 0.6 });
+  document.querySelectorAll('.stat-n').forEach(function(el){ cio.observe(el); });
+
+})();
+</script>
+</body>
+</html>
